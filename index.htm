@@ -4,25 +4,181 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>张棋淮是小张</title>
+    <!-- 引入炫酷字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
+            height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f2f5;
-            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #a8edf0 0%, #fed6e3 100%);
+            font-family: 'ZCOOL KuaiLe', cursive, system-ui, sans-serif;
+            overflow: hidden;
         }
-        h1 {
-            font-size: 4rem;
-            color: #333;
+
+        /* 核心卡片容器 */
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 40px 60px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             text-align: center;
-            padding: 20px;
+            transition: transform 0.3s ease;
+            z-index: 10;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* 大字标题与动画 */
+        h1 {
+            font-size: 4.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        /* 描述文字 */
+        p.subtitle {
+            font-size: 1.5rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* 互动按钮 */
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 28px;
+            font-size: 1.2rem;
+            font-family: inherit;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #3dbbb3;
+            transform: scale(1.05);
+        }
+
+        /* 飘落爱心/花瓣的画板 */
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
     </style>
 </head>
 <body>
-    <h1>张棋淮是小张</h1>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="card">
+        <h1>张棋淮是小张</h1>
+        <p class="subtitle">🎉 欢迎来到小张的专属专属主页！</p>
+        
+        <div class="btn-container">
+            <button class="btn-primary" onclick="sayHello()">点我有惊喜 ✨</button>
+            <button class="btn-secondary" onclick="addLike()">给小张点赞 👍 (<span id="likeCount">0</span>)</button>
+        </div>
+    </div>
+
+    <script>
+        // 点赞计数器
+        let likes = 0;
+        function addLike() {
+            likes++;
+            document.getElementById('likeCount').innerText = likes;
+            createEmoji('👍');
+        }
+
+        // 惊喜弹窗
+        function sayHello() {
+            alert('📢 再次强调：张棋淮确实就是小张无误！');
+            createEmoji('🎉');
+        }
+
+        // 简易背景漂浮粒子特效
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        for (let i = 0; i < 30; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 4 + 2,
+                color: `hsl(${Math.random() * 360}, 70%, 80%)`,
+                speedY: Math.random() * 1 + 0.5
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.y -= p.speedY;
+                if (p.y < 0) p.y = canvas.height;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // 调整窗口大小时重置画布
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
 </body>
 </html>
